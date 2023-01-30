@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
-languageCode = 'zh-cn'
-title = 'My New Hugo Site'
+baseURL = 'http://open-native.com/learning/scrapbook'
+languageCode = 'zh-CN'
+title = 'scrapbook'
 theme = 'tranquilpeak'
