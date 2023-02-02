@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Articles on scrapbook</title>
+    <link>http://open-native.com/learning/scrapbook/article/</link>
+    <description>Recent content in Articles on scrapbook</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 30 Jan 2023 14:50:17 +0800</lastBuildDate><atom:link href="http://open-native.com/learning/scrapbook/article/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Metastable Failure</title>
+      <link>http://open-native.com/learning/scrapbook/article/metastable-failure/</link>
+      <pubDate>Mon, 30 Jan 2023 14:50:17 +0800</pubDate>
+      
+      <guid>http://open-native.com/learning/scrapbook/article/metastable-failure/</guid>
+      <description>这篇文章的初衷，是记录拜读由Nathan Bronson, Aleksey Charapko, Abutalib Aghayev, and Timothy Zhu共同发表的论文Metastable Failures in Distributed Systems的收获，这篇论文描述了一个在大规模分布式系统中很常见的失败场景：亚稳定失败（metastable failures），它们为什么通常在高负载分布式系统中发生，以及解决问题的思路框架：如何识别和从亚稳定失败中恢复，甚至如何避免发生亚稳定失败。
+现实世界中的亚稳定失败 下图是某个公园中非常著名的徒步路线中非常关键的一部分：两座山之间一段狭长的山脊，在两座山之间徒步，只有扶着铁链穿过这段山梁才能保证安全。可以假想这段铁链就是一个分布式系统。 当公园不对徒步者人数做限制时，就有可能引起人群拥挤以至于长时间在起点等待去尝试减低负载。你可以想象一下”系统“经历了以下的状态转换。
+稳定状态（Stable state） 当人群低于某个安全阈值时，任何一个风险因素（例如：缓慢通过铁链的徒步者）都可能引起降速，但是系统仍然能够自愈。
+脆弱状态（Vulnerable state） 拥挤人群的数量持续增加超过了某个阈值，对于每段铁链的竞争也会增加 —— 下山的人必须要等待上山的人通过，或者干脆冒险不使用铁链而绕过他们。同样，上山的人也必须等待下山的人通过。当这种模式发生时，只要拥挤人群的数量低于某个阈值，系统仍然是可以工作的，但它现在是非常脆弱的，可能变成不可自愈的失败状态。
+亚稳定失败状态（Metastable Failure State） 当系统处于脆弱状态，某些风险因素可能导致情况恶化。想象一下，一组徒步者需要花费更长的时间通过铁链，这将会使其他上山和下山的人速度降下来。越来越多的人等待，导致在铁链两端和身在其中的剩余空间越来越狭窄，进而导致人们需要更多的时间通过，进一步导致更多的人等待&amp;hellip;情况循环恶化 —— 进入亚稳定失败状态。 保持系统处于亚稳定失败状态的正反馈循环
+由于这个自续的反馈循环，系统将保持在这个状态，即使移除最初的诱发风险因素。为了恢复，需要采取其他的措施，例如将负载降低到特定阈值以下。
+亚稳定失败定义 关于亚稳定失败的定义论文中描述如下
+亚稳定失败发生在对于负载来源没有控制的开放系统中，一个风险因素导致系统进入一个糟糕的状态，并且会持续存在甚至风险因素被移除。在这个状态系统的效率通常会很低，并且会产生持续影响——通常使工作负载放大或者整体效率降低——阻止系统从这个糟糕的状态中恢复。 Metastable failures occur in open systems with an uncontrolled source of load where a trigger causes the system to enter a bad state that persists even when the trigger is removed. In this state the goodput (i.</description>
+    </item>
+    
+  </channel>
+</rss>
