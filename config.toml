@@ -1,4 +1,4 @@
-baseURL = 'http://open-native.com/learning/scrapbook'
+baseURL = 'http://open-native.com'
 languageCode = 'zh-CN'
 languageName = "简体中文"
 title = '云原生·盐酒猿'
