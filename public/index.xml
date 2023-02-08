@@ -1,18 +1,74 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>scrapbook</title>
-    <link>http://open-native.com/learning/scrapbook/</link>
-    <description>Recent content on scrapbook</description>
+    <title>云原生·盐酒猿</title>
+    <link>http://open-native.com/</link>
+    <description>Recent content on 云原生·盐酒猿</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-CN</language><atom:link href="http://open-native.com/learning/scrapbook/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 02 Feb 2023 23:05:46 +0800</lastBuildDate><atom:link href="http://open-native.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Home</title>
-      <link>http://open-native.com/learning/scrapbook/home/</link>
-      <pubDate>Sun, 29 Jan 2023 21:03:43 +0800</pubDate>
+      <title>关于 istio-proxy 503/504等5xx问题排查</title>
+      <link>http://open-native.com/article/istio-proxy-503/</link>
+      <pubDate>Thu, 02 Feb 2023 23:05:46 +0800</pubDate>
       
-      <guid>http://open-native.com/learning/scrapbook/home/</guid>
-      <description>#hello, wellcome to my logs.</description>
+      <guid>http://open-native.com/article/istio-proxy-503/</guid>
+      <description>问题描述 在生产环境，我们最近部署了Istio Service Mesh，Istio控制平面会在每个服务Pod里自动注入一个sidecar。当各个服务都初始化istio-proxy，通过sidecar去实现服务间的调用时，应用和服务就会面临一个很普遍的问题：upstream 服务调用收到HTTP 503/504 response，这个报错信息通常都是由istio-proxy产生的。HTTP 503通常发生在应用和istio-proxy的inbound或者outbound调用，或者是服务网格外部的服务调用。影响面相对严重的是通过网格访问外部服务的outbound流量，相对小的是网格内部的inbound流量。HTTP 504的问题相对要少一些，只有在upstream service的接口response时间超过15秒时才会发生，因为istio-proxy的默认response超时时间就是15秒。 这个问题的现象跟真实的upstream组件失败错误很相似，然而，通过现象分析也有可能是istio本身的默认配置对于网格内部的应用不是那么健壮而问题引起的，对于那些影响面比较大的outbound服务调用：在某一个时间周期内，会有大量的503发生（通常访问量越大报错越多），过一段时间后自己会自愈，周而复始。
+影响小一些的inbound调用，在应用监控面板上看不到报错信息，只有在istio-proxy的log里会发现一些503的痕迹，因为我们通常会在客户端或者上游调用时配置重试规则，大部分异常调用都会在重试后成功拿到数据。
+对于outbound调用，504 response timeout错误只会对组件依赖超过15秒的请求造成影响。 可以观察一下istio-proxy日志里的HTTP 503/504	upstream错误，进一步的关于日志格式和response flags的信息可以点击链接查看。envoy log
+在详细探究这个错误的具体原因之前，我们先看一些错误一日信息的示例： Inbound Call Error example
+下面是一个istio-proxy日志里到达请求的response flag “UC”异常日志，含义是：“Upstream connection termination in addition to 503 response code”，由于某种原因在同一个pod里的istio-proxy和他的upstream容器之间的链接被断开了。
+还有另外一种response flag “UF”异常日志， 含义是：“Upstream connection failure in addition to 503 response code”，由于某种原因使同一个pod内的istio-proxy和他的upstream容器没办法建立链接
+[2022-04-18T09:29:59.633Z] &amp;#34;GET /service_a/v2.1/get?ids=123456 HTTP/1.1&amp;#34; 503 UC &amp;#34;-&amp;#34; &amp;#34;-&amp;#34; 0 95 11 - &amp;#34;-&amp;#34; &amp;#34;-&amp;#34; &amp;#34;bc6f9ba3-d8dc-4955-a092-64617d9277c8&amp;#34; &amp;#34;srv-a.xyz&amp;#34; &amp;#34;127.0.0.1:8080&amp;#34; inbound|80|http|srv-a.xyz.svc.cluster.local - 100.64.121.11:8080 100.64.254.9:35174 - [2022-04-18T08:38:43.</description>
+    </item>
+    
+    <item>
+      <title>从日志来探究Dapr源码-Dapr runtime的启动过程</title>
+      <link>http://open-native.com/scrapbook/dapr-runtime-start/</link>
+      <pubDate>Thu, 02 Feb 2023 23:02:40 +0800</pubDate>
+      
+      <guid>http://open-native.com/scrapbook/dapr-runtime-start/</guid>
+      <description>日志 首先，我们来整体观察一下在kubernetes集群环境下dapr服务的启动日志，以便对启动过程的时间线有一个整体的印象。
+time=&amp;#34;2022-05-12T01:51:07.584216594Z&amp;#34; level=info msg=&amp;#34;starting Dapr Runtime -- version 1.7.1 -- commit 5fd38aeaaa9cf58f3f00f6f9bfc6c58d8cd82b87&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1 time=&amp;#34;2022-05-12T01:51:07.584279407Z&amp;#34; level=info msg=&amp;#34;log level set to: debug&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1 time=&amp;#34;2022-05-12T01:51:07.585832265Z&amp;#34; level=info msg=&amp;#34;metrics server started on :9090/&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.metrics type=log ver=1.7.1 time=&amp;#34;2022-05-12T01:51:07.585962686Z&amp;#34; level=info msg=&amp;#34;loading default configuration&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1 time=&amp;#34;2022-05-12T01:51:07.585982324Z&amp;#34; level=debug msg=&amp;#34;Resiliency is not enabled.&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1 time=&amp;#34;2022-05-12T01:51:07.586012006Z&amp;#34; level=info msg=&amp;#34;kubernetes mode configured&amp;#34; app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.</description>
+    </item>
+    
+    <item>
+      <title>Dapr助力异构语言系统的事件驱动架构设计</title>
+      <link>http://open-native.com/scrapbook/dapr-intro/</link>
+      <pubDate>Thu, 02 Feb 2023 22:43:18 +0800</pubDate>
+      
+      <guid>http://open-native.com/scrapbook/dapr-intro/</guid>
+      <description>我们在探讨微服务时，通常避不开服务的颗粒度和服务之间的松耦合。也就是说服务应该是能够自治的，能够掌控服务所有的依赖，并且尽量降低同步通信的频率。今天我们来探讨一下实现分布式服务松耦合的事件驱动架构模式，以及异构语言系统如何实现事件驱动架构设计。
+事件驱动架构 事件驱动架构（EDA）是一个倡导在分布式微服务系统中使用事件生产和消费的软件架构范式。一个事件代表一个具有重大影响的行为，一个事件发生通常意味着一个实体的创建或者状态发生变更，例如电商系统中创建一笔订单或者订单状态发生变化。
+关于事件的特别之处在于他们没有显示的与可能关心他们是否发生的服务直接产生通信。事件就是“仅仅发生过”而已，而不会去考虑是否有特定的服务对他们的发生感兴趣，这也正是事件强大的原因——事件转换为自包含的一条记录，从根本上与他们的处理程序解耦。事实上，事件的生产者通常不知道谁是事件的消费者，或者消费者可能根本就不存在。 事件需要作为记录被持久化，一条记录应该包含描述一个事件所有必要的信息，事件的生产者应该确保潜在的消费者能够获取到处理事件需要的所有数据。 如上图所示，实现事件驱动架构有四个主要组件：
+事件生产者：开始整个工作流的初始事件发布者。 事件代理：代理维护一个channel/queue/topic来发布事件。 事件消费者：事件记录消息的订阅者，并根据事件来执行特定行为。 处理事件：让整个系统知晓事件消费者在消费事件之后而采取行为所带来的影响，这通常是另一个工作流的初始事件。 通过异步和通用解耦 耦合其实就是一个组件受其他组件影响的程度，耦合有两个维度：空间维度——组件在结构上相关；时间维度——他们的关系受时间影响的程度，例如，同步调用一个REST API。如果两个服务必须同时可操作，那么它们之间存在一定程度的时间耦合。如果组件之间存在很强的相互依赖性，我们就称它们为紧耦合，否则就称它们为松耦合。 那么，EDA如何抑制耦合？
+事件不是通信，他们仅仅是发生而已。组件发生了一个事件并发布一条记录，而不关心事件的消费组件是否存在。因此，如果消费者不可用，也不会影响到生产者。 在代理上事件记录的持久性在很大程度上消除了时间的概念。生产者在T1发布了一个事件，消费者可能在T2读到这条消息，至于T1和T2之间的时间窗口可大可小。 但是EDA并没有完全消除耦合，事件代理对于生产者和消费者解耦都是至关重要的，他们必须依赖一个代理来实现信息传递，这也增加了系统架构的复杂性，并引入了一个新的故障点。这就是为什么要求代理必须具备高性能和高容错能力的原因。
+事件的类型 事件通知。该类型的事件通常在一个组件发送事件消息通知其他的组件在各自领域内发生变更时使用。事件通知的关键因素就是事件来源组件不关心通知消息的响应。 事件溯源。事件溯源的核心思想是当组件状态发生变化时，组件将状态变更记录为一个事件，并且我们可以在未来的任何时候通过重新处理事件来重建系统状态。事件存储成为真相的主要来源，组件状态纯粹从它派生而来，例如版本控制系统。 携带状态的事件传输。当事件的消费者组件状态变更不需要请求生产者组件以获取数据时，可以使用这种模式。事件记录包含了所有必要的数据。 事件处理的模式 事件处理通常有三种风格的定义，这三种实现风格在很大程度上并不是互斥的，在一个大型事件驱动系统中通常是互相协作共同发挥作用的。
+离散事件处理 离散事件处理的特征是通常事件之间彼此是相互独立不相关的，可以被独立处理。例如，订单支付后物流发货和赠送积分。
+事件流处理 对无边界的相关事件流处理，事件记录按照一定顺序被发布和处理。消费者可以按照生产者规定的顺序处理事件记录并在本地数据库中保存一个实体的副本。离散地处理这些更改记录不会减少它，因为顺序很重要。多个消费者还需要注意资源竞争，因为在这种情况下可能发生多个消费者试图并发地修改数据库中同一条记录，因为无序更新导致数据不一致。 可以借助Kafka之类的事件流平台来保持实体更新的顺序，Kafka的顺序队列通过数据键值和partition来保证一组消息在同一个队列中的顺序，从而解决资源竞争问题。
+复合事件处理 复合事件处理是从一组简单事件标识的复合事件模式。这种处理方式通常更复杂，要求事件处理器跟踪先前的事件并提供查询和聚合这些事件的方法。假设我们有一个服务弹性扩容事件，扩容条件是CPU使用率大于80%并且内存使用率大于85%，那么扩容事件就可以定义为由CPU使用率高于80%警报和内存使用率高于85%警报两个简单事件标识的复合事件。
+EDA的优势 缓冲和高容错。 事件生产者和消费者解耦，避免了普遍的点到点故障。 高可伸缩性。无论是代理的规模还是消费者的数量，都具备很高的可伸缩性。 EDA的缺点 仅限于异步处理。 为系统引入了额外的复杂度——代理。 故障屏蔽——不像紧耦合系统那样能够快速直接地获取系统里各组件的故障，虽然有时这个故障的影响是很严重的。松耦合系统尽量避免一个组件的故障对其他组件的稳定性带来影响，但是有时候这也掩盖了本应该及时引起我们注意的问题。通常需要依靠各个组件的监控和日志来解决，但这又增加了复杂性。 在设计事件时，首先需要考虑跨系统的事件回滚，这将增加数据库的复杂性。 什么时候使用EDA 不透明消费的系统。生产者通常不知道消费者的情况。后者甚至可能是短暂的过程，可能在短时间内出现和消失! 高扇出。一个事件可能由多个不同的消费者处理的场景。 复杂的模式匹配。将简单事件串在一起以推断出更复杂的事件。 命令-查询责任分离。CQRS是一种分离数据存储的读取和更新操作的模式。实现CQRS可以提高应用程序的可伸缩性和弹性，但需要在一致性方面进行一些权衡。此模式通常与EDA相关联。 Commond和Event Commond，其目的是在特定的边界内调用与业务逻辑相关的行为,Commond只有一个消费者，表述动作即将发生但是还未发生。相较于事件驱动的异步处理模式，Commond通常是通过REST API来实现的同步调用。 事件是对已经发生的事情的纯粹描述，它没有规定应该如何处理事件。而Commond是指向特定组件的直接指令。因为Commond和事件都是某种类型的消息，所以很容易混淆，将指令错误地表示为事件。 通常在组件数量比较少，与其他组件通信也比较少的情况下，事件驱动还是比较可控的，但是随着组件或者微服务的数量越来越多，难度也会随之增加。如果我们不经过细致的设计，全程使用命令驱动将会带来不必要的耦合。同样如果全程使用事件驱动，不仅会增加开发难度和业务边界不清晰，而且也有可能设计出一个紧耦合的服务，导致建立一个分布式单体服务，这将比一个纯粹的单体服务更糟糕。 Commond和Event的选择应该根据实际使用场景灵活选择，如果消费者是业务逻辑”执行“的一部分，则应该使用Common模式；如果消费者是业务逻辑执行后的”通知“部分，则比较适合Event。
+异构语言系统的事件驱动设计 异构语言系统实现实现事件驱动设计，面临着诸多挑战
+重复工作。无论事件记录的发布、消费，事件记录的持久化，还是事件代理组件的对接，可能不同语言服务都要重复开发一次。这不仅大大增加工作量，而且还会为系统整体质量带来了很多不确定性，毕竟康威定律在微服务领域还是有实际意义的。 组件选择的限制。虽然各个云平台对于存储和stream服务都尽可能全面地提供标准API和通用SDK。但是由于语言特性的差异，不可避免在技术选型上有所限制。 可移植性。无论是运行云平台的迁移，还是组件的迁移，都是一个巨大而又冒险的工作。系统的可移植性很大程度上依赖引入组件的可移植性。 配置信息管理。大规模分布式服务中，配置管理本身就是一个麻烦事。 那么有没有更优雅一些的方式，为事件驱动设计的落地提供助力？Dapr也许是一个不错的选择。
+关于Dapr（分布式应用运行时） Dapr是由微软开源的一个可移植的、事件驱动的分布式运行时框架。Dapr除了自托管运行模式外，还可以运行在kuberneets云原生平台上，以边车模式为应用服务提供多种代理模式。在kuberneets对分布式服务资源抽象的基础上，Dapr实现了分布式服务能力抽象的跃迁，它可以使开发人员从复杂基础服务组件的管理中解放出来，更专注于领域业务逻辑的开发，轻松构建出弹性的、无状态和有状态、可迁移的应用程序。上帝的归上帝，凯撒的归凯撒。对Dapr感兴趣的同学，可以去Dapr官网上了解更详细的信息。
+为什么Dapr Dapr通过开放、灵活、独立的构建块，将服务调用、输入输出绑定、状态存储、发布订阅和配置管理等能力抽象为标准API，API支持http和grpc两种通讯协议。由于Dapr是可移植和跨平台的，开发者就能够用他们喜欢的语言和框架来构建可移植的应用程序。 发布订阅 Dapr提供了一个可扩展的Pub/Sub服务（保证消息至少消费一次），允许开发者发布和订阅主题。 Dapr为Pub/Sub提供各种实现组件，使操作者能够使用他们所喜欢的基础设施，例如 Redis Streams 和 Kafka等。从而实现了应用程序和基础设施的解耦，应用程序只需要接入Dapr SDK，而不需要对接每个组件。对于开发的工作量和复杂度、规范约束的执行都会带来很多便利。并且底层组件的维护、升级甚至是迁移，对于应用服务来说，将不再是负担。
+例如，java项目接入Dapr</description>
+    </item>
+    
+    <item>
+      <title>分布式系统中亚稳定失败状态</title>
+      <link>http://open-native.com/article/metastable-failure/</link>
+      <pubDate>Mon, 30 Jan 2023 14:50:17 +0800</pubDate>
+      
+      <guid>http://open-native.com/article/metastable-failure/</guid>
+      <description>这篇文章的初衷，是记录拜读由Nathan Bronson, Aleksey Charapko, Abutalib Aghayev, and Timothy Zhu共同发表的论文Metastable Failures in Distributed Systems的收获，这篇论文描述了一个在大规模分布式系统中很常见的失败场景：亚稳定失败（metastable failures），它们为什么通常在高负载分布式系统中发生，以及解决问题的思路框架：如何识别和从亚稳定失败中恢复，甚至如何避免发生亚稳定失败。
+现实世界中的亚稳定失败 下图是某个公园中非常著名的徒步路线中非常关键的一部分：两座山之间一段狭长的山脊，在两座山之间徒步，只有扶着铁链穿过这段山梁才能保证安全。可以假想这段铁链就是一个分布式系统。 当公园不对徒步者人数做限制时，就有可能引起人群拥挤以至于长时间在起点等待去尝试减低负载。你可以想象一下”系统“经历了以下的状态转换。
+稳定状态（Stable state） 当人群低于某个安全阈值时，任何一个风险因素（例如：缓慢通过铁链的徒步者）都可能引起降速，但是系统仍然能够自愈。
+脆弱状态（Vulnerable state） 拥挤人群的数量持续增加超过了某个阈值，对于每段铁链的竞争也会增加 —— 下山的人必须要等待上山的人通过，或者干脆冒险不使用铁链而绕过他们。同样，上山的人也必须等待下山的人通过。当这种模式发生时，只要拥挤人群的数量低于某个阈值，系统仍然是可以工作的，但它现在是非常脆弱的，可能变成不可自愈的失败状态。
+亚稳定失败状态（Metastable Failure State） 当系统处于脆弱状态，某些风险因素可能导致情况恶化。想象一下，一组徒步者需要花费更长的时间通过铁链，这将会使其他上山和下山的人速度降下来。越来越多的人等待，导致在铁链两端和身在其中的剩余空间越来越狭窄，进而导致人们需要更多的时间通过，进一步导致更多的人等待&amp;hellip;情况循环恶化 —— 进入亚稳定失败状态。 保持系统处于亚稳定失败状态的正反馈循环
+由于这个自续的反馈循环，系统将保持在这个状态，即使移除最初的诱发风险因素。为了恢复，需要采取其他的措施，例如将负载降低到特定阈值以下。
+亚稳定失败定义 关于亚稳定失败的定义论文中描述如下
+亚稳定失败发生在对于负载来源没有控制的开放系统中，一个风险因素导致系统进入一个糟糕的状态，并且会持续存在甚至风险因素被移除。在这个状态系统的效率通常会很低，并且会产生持续影响——通常使工作负载放大或者整体效率降低——阻止系统从这个糟糕的状态中恢复。 Metastable failures occur in open systems with an uncontrolled source of load where a trigger causes the system to enter a bad state that persists even when the trigger is removed. In this state the goodput (i.</description>
     </item>
     
   </channel>

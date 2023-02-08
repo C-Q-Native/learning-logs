@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on scrapbook</title>
-    <link>http://open-native.com/learning/scrapbook/tags/</link>
-    <description>Recent content in Tags on scrapbook</description>
+    <title>Tags on 云原生·盐酒猿</title>
+    <link>http://open-native.com/tags/</link>
+    <description>Recent content in Tags on 云原生·盐酒猿</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-CN</language><atom:link href="http://open-native.com/learning/scrapbook/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-cn</language><atom:link href="http://open-native.com/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
