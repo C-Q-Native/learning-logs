@@ -1,10 +1,20 @@
 ---
 title: "关于 istio-proxy 503/504等5xx问题排查"
-date: 2023-02-02T23:05:46+08:00
+date: 2022-10-02T23:05:46+08:00
+categories:
+- istio
+tags:
+- cloud-native
+- kubernetes
+- service-mesh
+#thumbnailImagePosition: "top"
+#thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city-750.jpg
+#coverImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city.jpg
 ---
 
 #### 问题描述
  在生产环境，我们最近部署了Istio Service Mesh，Istio控制平面会在每个服务Pod里自动注入一个sidecar。当各个服务都初始化istio-proxy，通过sidecar去实现服务间的调用时，应用和服务就会面临一个很普遍的问题：upstream 服务调用收到HTTP 503/504 response，这个报错信息通常都是由istio-proxy产生的。HTTP 503通常发生在应用和istio-proxy的inbound或者outbound调用，或者是服务网格外部的服务调用。影响面相对严重的是通过网格访问外部服务的outbound流量，相对小的是网格内部的inbound流量。HTTP 504的问题相对要少一些，只有在upstream service的接口response时间超过15秒时才会发生，因为istio-proxy的默认response超时时间就是15秒。
+ <!--more-->
 ![image.png](/images/234464106-62959033d92eb_fix732.png)
 这个问题的现象跟真实的upstream组件失败错误很相似，然而，通过现象分析也有可能是istio本身的默认配置对于网格内部的应用不是那么健壮而问题引起的，对于那些影响面比较大的outbound服务调用：在某一个时间周期内，会有大量的503发生（通常访问量越大报错越多），过一段时间后自己会自愈，周而复始。
 

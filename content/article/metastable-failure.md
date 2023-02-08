@@ -1,10 +1,15 @@
 ---
 title: "分布式系统中亚稳定失败状态"
-date: 2023-01-30T14:50:17+08:00
+date: 2022-01-13T14:50:17+08:00
+categories:
+- 翻译文章
+- 架构
+tags:
+- 架构
 ---
 
 这篇文章的初衷，是记录拜读由Nathan Bronson, Aleksey Charapko, Abutalib Aghayev, and Timothy Zhu共同发表的论文[Metastable Failures in Distributed Systems](https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf)的收获，这篇论文描述了一个在大规模分布式系统中很常见的失败场景：亚稳定失败（metastable failures），它们为什么通常在高负载分布式系统中发生，以及解决问题的思路框架：如何识别和从亚稳定失败中恢复，甚至如何避免发生亚稳定失败。
-
+<!--more-->
 #### **现实世界中的亚稳定失败**
 下图是某个公园中非常著名的徒步路线中非常关键的一部分：两座山之间一段狭长的山脊，在两座山之间徒步，只有扶着铁链穿过这段山梁才能保证安全。可以假想这段铁链就是一个分布式系统。
 ![铁链](/images/2314028985-62c6b28562bdb.png)

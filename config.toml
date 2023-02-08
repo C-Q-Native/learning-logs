@@ -64,7 +64,7 @@ canonifyurls = true
 [[menu.main]]
   weight = 1
   identifier = "home"
-  name = "首页"
+  name = "Home"
   pre = "<i class=\"sidebar-button-icon fas fa-lg fa-home\" aria-hidden=\"true\"></i>"
   url = "/"
 [[menu.main]]
@@ -75,16 +75,16 @@ canonifyurls = true
   url = "/categories"
 [[menu.main]]
   weight = 3
-  identifier = "article"
-  name = "文章"
+  identifier = "tags"
+  name = "Tags"
   pre = "<i class=\"sidebar-button-icon fas fa-lg fa-tags\" aria-hidden=\"true\"></i>"
-  url = "/article/"
+  url = "/tags"
 [[menu.main]]
   weight = 4
-  identifier = "scrapbook"
-  name = "学习札记"
+  identifier = "archives"
+  name = "Archives"
   pre = "<i class=\"sidebar-button-icon fas fa-lg fa-archive\" aria-hidden=\"true\"></i>"
-  url = "/scrapbook/"
+  url = "/archives"
 [[menu.main]]
   weight = 5
   identifier = "about"
@@ -358,7 +358,7 @@ canonifyurls = true
       # repo =
       # See all options: https://github.com/gitalk/gitalk#options
       [params.comment.gitalk.options]
-        language = "en"
+        language = "zh-cn"
         perPage = 10
         distractionFreeMode = false
         enableHotKey = true

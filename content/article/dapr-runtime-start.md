@@ -1,11 +1,18 @@
 ---
 title: "从日志来探究Dapr源码-Dapr runtime的启动过程"
-date: 2023-02-02T23:02:40+08:00
+date: 2023-01-13T23:02:40+08:00
+categories:
+- Dapr
+- 源码解析
+tags:
+- Dapr
+- cloud-native
+- kubernetes
 ---
 
 #### 日志
 首先，我们来整体观察一下在kubernetes集群环境下dapr服务的启动日志，以便对启动过程的时间线有一个整体的印象。
-
+<!--more-->
 ```
 time="2022-05-12T01:51:07.584216594Z" level=info msg="starting Dapr Runtime -- version 1.7.1 -- commit 5fd38aeaaa9cf58f3f00f6f9bfc6c58d8cd82b87" app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1
 time="2022-05-12T01:51:07.584279407Z" level=info msg="log level set to: debug" app_id=nodeapp instance=nodeapp-967854b66-vdcwt scope=dapr.runtime type=log ver=1.7.1
