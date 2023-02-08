@@ -12,7 +12,7 @@ tags:
 <!--more-->
 #### **现实世界中的亚稳定失败**
 下图是某个公园中非常著名的徒步路线中非常关键的一部分：两座山之间一段狭长的山脊，在两座山之间徒步，只有扶着铁链穿过这段山梁才能保证安全。可以假想这段铁链就是一个分布式系统。
-![铁链](/images/2314028985-62c6b28562bdb.png)
+![铁链](https://raw.githubusercontent.com/RcXu/images/master/2314028985-62c6b28562bdb.png)
 当公园不对徒步者人数做限制时，就有可能引起人群拥挤以至于长时间在起点等待去尝试减低负载。你可以想象一下”系统“经历了以下的状态转换。
 1. 稳定状态（Stable state）
 当人群低于某个安全阈值时，任何一个风险因素（例如：缓慢通过铁链的徒步者）都可能引起降速，但是系统仍然能够自愈。
@@ -22,7 +22,7 @@ tags:
 
 3. 亚稳定失败状态（Metastable Failure State）
 当系统处于脆弱状态，某些风险因素可能导致情况恶化。想象一下，一组徒步者需要花费更长的时间通过铁链，这将会使其他上山和下山的人速度降下来。越来越多的人等待，导致在铁链两端和身在其中的剩余空间越来越狭窄，进而导致人们需要更多的时间通过，进一步导致更多的人等待...情况循环恶化 —— 进入亚稳定失败状态。
-![保持系统处于亚稳定失败状态的正反馈循环](/images/2957888225-62c6bca36cbf3_fix732.png)
+![保持系统处于亚稳定失败状态的正反馈循环](https://raw.githubusercontent.com/RcXu/images/master/2957888225-62c6bca36cbf3_fix732.png)
 *保持系统处于亚稳定失败状态的正反馈循环*
 
 由于这个自续的反馈循环，系统将保持在这个状态，即使移除最初的诱发风险因素。为了恢复，需要采取其他的措施，例如将负载降低到特定阈值以下。
@@ -32,7 +32,7 @@ tags:
 > 亚稳定失败发生在对于负载来源没有控制的开放系统中，一个风险因素导致系统进入一个糟糕的状态，并且会持续存在甚至风险因素被移除。在这个状态系统的效率通常会很低，并且会产生持续影响——通常使工作负载放大或者整体效率降低——阻止系统从这个糟糕的状态中恢复。
 > Metastable failures occur in open systems with an uncontrolled source of load where a trigger causes the system to enter a bad state that persists even when the trigger is removed. In this state the goodput (i.e., throughput of useful work) is unusably low, and there is a sustaining effect — often involving work amplification or decreased overall efficiency — that prevents the system from leaving the bad state.
 
-![image.png](/images/2127254734-62c6c29c4e0b1_fix732.png)
+![image.png](https://raw.githubusercontent.com/RcXu/images/master/2127254734-62c6c29c4e0b1_fix732.png)
 如果这样，那么为什么不总是运行在稳定状态？诚如，在许多系统中高效的资源利用是非常重要的，所以许多系统选择运行在脆弱状态而不是稳定状态，已获得更高的效率。
 当系统处于亚稳定失败状态，系统不会自愈，想要恢复需要采取重要措施，例如降低负载。
 

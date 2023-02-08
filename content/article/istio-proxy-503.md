@@ -15,7 +15,7 @@ tags:
 #### 问题描述
  在生产环境，我们最近部署了Istio Service Mesh，Istio控制平面会在每个服务Pod里自动注入一个sidecar。当各个服务都初始化istio-proxy，通过sidecar去实现服务间的调用时，应用和服务就会面临一个很普遍的问题：upstream 服务调用收到HTTP 503/504 response，这个报错信息通常都是由istio-proxy产生的。HTTP 503通常发生在应用和istio-proxy的inbound或者outbound调用，或者是服务网格外部的服务调用。影响面相对严重的是通过网格访问外部服务的outbound流量，相对小的是网格内部的inbound流量。HTTP 504的问题相对要少一些，只有在upstream service的接口response时间超过15秒时才会发生，因为istio-proxy的默认response超时时间就是15秒。
  <!--more-->
-![image.png](/images/234464106-62959033d92eb_fix732.png)
+![image.png](https://raw.githubusercontent.com/RcXu/images/master/234464106-62959033d92eb_fix732.png)
 这个问题的现象跟真实的upstream组件失败错误很相似，然而，通过现象分析也有可能是istio本身的默认配置对于网格内部的应用不是那么健壮而问题引起的，对于那些影响面比较大的outbound服务调用：在某一个时间周期内，会有大量的503发生（通常访问量越大报错越多），过一段时间后自己会自愈，周而复始。
 
 影响小一些的inbound调用，在应用监控面板上看不到报错信息，只有在istio-proxy的log里会发现一些503的痕迹，因为我们通常会在客户端或者上游调用时配置重试规则，大部分异常调用都会在重试后成功拿到数据。
@@ -61,7 +61,7 @@ tags:
 
 在下图中，红色箭头表示的链接被应用服务器终止了，但是istio-proxy仍然在为另一个请求复用这个链接，此时这个upstream链接就会收到503 error code (response flag UC)，这个问题在高并发场景就相对比较常见。
 
-![image.png](/images/3241597367-629590ec2f839_fix732.png)
+![image.png](https://raw.githubusercontent.com/RcXu/images/master/3241597367-629590ec2f839_fix732.png)
 
 inbound请求还有另外一种503错误，response flag为 UF (upstream connection failure)，这通常是由于应用容器自己crash掉了引起的。
 
@@ -69,7 +69,7 @@ inbound请求还有另外一种503错误，response flag为 UF (upstream connect
 
 在标准的istio网格环境里，一个请求通过istio-proxy请求一个外部服务，如果没有为这个外部服务设置详细的Istio配置（例如ServiceEntry），那么就不会有路由或者流量管理规则可以被使用，它就是一个简单的维持在目标服务之间的HTTP1.1协议的TCP链接。正在初始化outbound请求的应用在离开本地网络接口之前需要解析外部域名的DNS协议，IPtable规则劫持这个请求并转发到istio-proxy，然后istio-proxy会关闭这个链接并开启一个执行远端主机IP的新链接。
 
-![image.png](/images/545445972-6295910addd21_fix732.png)
+![image.png](https://raw.githubusercontent.com/RcXu/images/master/545445972-6295910addd21_fix732.png)
 
 istio-proxy不会主动关闭这个长链接，除非启动该链接的应用想要主动关闭它。因此，该应用发起的新请求不会再进行DNS解析，因为从应用视角来看已经建立了链接。随着时间流逝，istio-proxy将会返回一个503错误。
 
