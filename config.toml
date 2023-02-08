@@ -52,7 +52,7 @@ canonifyurls = true
   gravatarEmail = "honeyxhl@163.com"
   # Your profile picture
   # Overwritten by your gravatar image if `author.gravatarEmail` is filled
-  picture = "http://open-native.com/images/WechatIMG186.jpeg"
+  picture = "https://avatars.githubusercontent.com/u/17242622?s=400&u=4d67fa6ce2c389749173344334d9d68fd9e1f429&v=4"
   # Your Twitter username without the @. E.g : thibaudlepretre
   # twitter = "thibaudlepretre"
   # Your google plus profile id. E.g : +ThibaudLepretre or 114625208755123718311
