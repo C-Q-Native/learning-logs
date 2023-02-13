@@ -15,7 +15,7 @@ tags:
 
 关于事件的特别之处在于他们没有显示的与可能关心他们是否发生的服务直接产生通信。事件就是“仅仅发生过”而已，而不会去考虑是否有特定的服务对他们的发生感兴趣，这也正是事件强大的原因——事件转换为自包含的一条记录，从根本上与他们的处理程序解耦。事实上，事件的生产者通常不知道谁是事件的消费者，或者消费者可能根本就不存在。
 事件需要作为记录被持久化，一条记录应该包含描述一个事件所有必要的信息，事件的生产者应该确保潜在的消费者能够获取到处理事件需要的所有数据。
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/1420195210-62d2d3ff936bc_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/1420195210-62d2d3ff936bc_fix732.png)
 
 如上图所示，实现事件驱动架构有四个主要组件：
 * 事件生产者：开始整个工作流的初始事件发布者。
@@ -25,7 +25,7 @@ tags:
 
 #### 通过异步和通用解耦
 耦合其实就是一个组件受其他组件影响的程度，耦合有两个维度：空间维度——组件在结构上相关；时间维度——他们的关系受时间影响的程度，例如，同步调用一个REST API。如果两个服务必须同时可操作，那么它们之间存在一定程度的时间耦合。如果组件之间存在很强的相互依赖性，我们就称它们为紧耦合，否则就称它们为松耦合。
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/3189038872-62d2d9612a7dd_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/3189038872-62d2d9612a7dd_fix732.jpg)
 
 那么，EDA如何抑制耦合？
 1. 事件不是通信，他们仅仅是发生而已。组件发生了一个事件并发布一条记录，而不关心事件的消费组件是否存在。因此，如果消费者不可用，也不会影响到生产者。
@@ -61,7 +61,7 @@ tags:
 3. 故障屏蔽——不像紧耦合系统那样能够快速直接地获取系统里各组件的故障，虽然有时这个故障的影响是很严重的。松耦合系统尽量避免一个组件的故障对其他组件的稳定性带来影响，但是有时候这也掩盖了本应该及时引起我们注意的问题。通常需要依靠各个组件的监控和日志来解决，但这又增加了复杂性。
 4. 在设计事件时，首先需要考虑跨系统的事件回滚，这将增加数据库的复杂性。
 
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/4277371108-62d4005714e65_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/4277371108-62d4005714e65_fix732.jpg)
 
 #### 什么时候使用EDA
 1. 不透明消费的系统。生产者通常不知道消费者的情况。后者甚至可能是短暂的过程，可能在短时间内出现和消失!
@@ -87,16 +87,16 @@ Commond和Event的选择应该根据实际使用场景灵活选择，如果消�
 ### 关于Dapr（分布式应用运行时）
 Dapr是由微软开源的一个可移植的、事件驱动的分布式运行时框架。Dapr除了自托管运行模式外，还可以运行在kuberneets云原生平台上，以边车模式为应用服务提供多种代理模式。在kuberneets对分布式**服务资源**抽象的基础上，Dapr实现了分布式**服务能力**抽象的跃迁，它可以使开发人员从复杂基础服务组件的管理中解放出来，更专注于领域业务逻辑的开发，轻松构建出弹性的、无状态和有状态、可迁移的应用程序。上帝的归上帝，凯撒的归凯撒。对Dapr感兴趣的同学，可以去[Dapr官网](https://dapr.io)上了解更详细的信息。
 
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/1483645307-62d527d302924_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com//1483645307-62d527d302924_fix732.jpg)
 
 #### 为什么Dapr
 Dapr通过开放、灵活、独立的构建块，将服务调用、输入输出绑定、状态存储、发布订阅和配置管理等能力抽象为标准API，API支持http和grpc两种通讯协议。由于Dapr是可移植和跨平台的，开发者就能够用他们喜欢的语言和框架来构建可移植的应用程序。
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/1997847010-62d636f81e131_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/1997847010-62d636f81e131_fix732.png)
 
 **发布订阅**
 Dapr提供了一个可扩展的Pub/Sub服务（保证消息至少消费一次），允许开发者发布和订阅主题。 Dapr为Pub/Sub提供各种实现组件，使操作者能够使用他们所喜欢的基础设施，例如 Redis Streams 和 Kafka等。从而实现了应用程序和基础设施的解耦，应用程序只需要接入Dapr SDK，而不需要对接每个组件。对于开发的工作量和复杂度、规范约束的执行都会带来很多便利。并且底层组件的维护、升级甚至是迁移，对于应用服务来说，将不再是负担。
 
-![image.png](https://raw.githubusercontent.com/RcXu/images/master/4181337174-62d6485a679c1_fix732.png)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/4181337174-62d6485a679c1_fix732.jpg)
 
 例如，java项目接入Dapr
 1. 在pom文件中引入Dapr sdk
