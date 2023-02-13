@@ -87,7 +87,7 @@ Commond和Event的选择应该根据实际使用场景灵活选择，如果消�
 ### 关于Dapr（分布式应用运行时）
 Dapr是由微软开源的一个可移植的、事件驱动的分布式运行时框架。Dapr除了自托管运行模式外，还可以运行在kuberneets云原生平台上，以边车模式为应用服务提供多种代理模式。在kuberneets对分布式**服务资源**抽象的基础上，Dapr实现了分布式**服务能力**抽象的跃迁，它可以使开发人员从复杂基础服务组件的管理中解放出来，更专注于领域业务逻辑的开发，轻松构建出弹性的、无状态和有状态、可迁移的应用程序。上帝的归上帝，凯撒的归凯撒。对Dapr感兴趣的同学，可以去[Dapr官网](https://dapr.io)上了解更详细的信息。
 
-![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com//1483645307-62d527d302924_fix732.jpg)
+![image.png](https://open-native.obs.cn-north-4.myhuaweicloud.com/1483645307-62d527d302924_fix732.jpg)
 
 #### 为什么Dapr
 Dapr通过开放、灵活、独立的构建块，将服务调用、输入输出绑定、状态存储、发布订阅和配置管理等能力抽象为标准API，API支持http和grpc两种通讯协议。由于Dapr是可移植和跨平台的，开发者就能够用他们喜欢的语言和框架来构建可移植的应用程序。
