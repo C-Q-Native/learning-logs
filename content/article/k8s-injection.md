@@ -74,3 +74,22 @@ Resource | Label | Enabled value | Disabled value
 ---|--- | --- | ---
 Namespace | istio-injection | enabled | disabled
 Pod | sidecar.istio.io/inject | "true" | "false"
+
+注入器配置遵循以下逻辑：
+- 任意一个标签设置为disabled，那么pod将不会被注入
+- 任意一个标签设置为enabled，那么pod将会被注入
+- 如果没有标签被设置，如果 **.values.sidecarInjectorWebhook.enableNamespacesByDefault** 被设置，那么pod将会被注入。该值默认是不开启的。
+
+#### 手动注入
+使用``` istioctl kube-inject```命令，手动注入一个deployment。
+
+```
+istioctl kube-inject -f samples/sleep/sleep.yaml | kubectl apply -f -
+
+serviceaccount/sleep created
+service/sleep created
+deployment.apps/sleep created
+```
+默认情况下，这将使用集群内配置。或者，也可以使用配置的本地副本进行注入。
+
+通常，pod会被依据sidecar injection template来进行注入，该模板信息配置在 ```istio-sidecar-injector``` configmap 资源中。当然，这些配置项也支持被每个pod所覆盖去创建一个独特的pod。
