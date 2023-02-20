@@ -12,7 +12,6 @@ tags:
 # thumbnailImage: https://open-native.obs.cn-north-4.myhuaweicloud.com/1_0Ah8nTMQ51U-hU_mrXOP1Q.webp
 ---
 
-## 1、sidecar 模式
 在云原生生态愈加成熟的加持下，微服务架构体系服务治理能力下沉，基础设施的服务能力和计算能力进一步抽象，以达到进一步实现应用程序和基础服务更加细化的垂直分工和运行时解耦，已经成为越来越容易被大家 所追求的新趋势。
 
 而被社区广泛使用的Sidecar模式，通过部署独立进程的Sidecar实现与应用程序松耦合，大大降低了构建高可用、高度弹性和高度可扩展微服务架构体系的复杂度。
@@ -33,7 +32,7 @@ tags:
 - 目前社区内使用sidecar的项目所能提供的服务都比较全面，但是对于应用程序来讲，可能往往只需要一两个核心功能。繁杂的sidecar，可能给应用程序就带来了“新压力”。
 ![image](https://open-native.obs.cn-north-4.myhuaweicloud.com/sidecat-d-2.png)
 
-## 2、kubernetes 准入Webhook
+## kubernetes 准入Webhook
 想要深入了解sidecar是怎么注入到应用程序pod中的，首先需要先了解一下kubernetes准入Webhook。
 Kubernetes提供了很多扩展其内置功能的方法，比如准入控制器（准入webhook），可以用来扩展其API。
 
@@ -53,3 +52,25 @@ Kubernetes提供了很多扩展其内置功能的方法，比如准入控制器�
 
 准入控制器是kubernetes 的API Server上的一个链式Filter，它根据一定的规则决定是否允许当前的请求生效，并且有可能会改写资源声明。
 ![image](https://open-native.obs.cn-north-4.myhuaweicloud.com/73737ad312df1ba213568040bbfa6a0da10cf3.jpeg)
+
+
+## 一些开源项目Sidecar注入实现解析
+
+### istio sidecar注入
+istio提供了两种proxy sidecar注入的实现方式：在pod namespace中启用自动sidecar注入和使用[istioctl](https://istio.io/latest/docs/reference/commands/istioctl/)命令手动注入。
+
+当在pod namespace中启用自动注入，将在pod创建过程中使用准入控制器注入proxy配置。
+
+手动注入则是直接修改deployment的配置文件添加proxy配置信息。
+
+当然，社区推荐使用自动注入。
+
+#### 自动注入
+通过给namespace添加 **istio-injection=enabled** 标签来启用注入控制器，然后在该namespace中新场景的pod都会自动注入一个sidecar。自动注入deployment文件不会发生任何改变，
+
+除了支持namespac级别的注入策略，istio也提供pod级别的注入策略控制规则，通过给单个pod添加sidecar.istio.io/inject 标签来实现。
+
+Resource | Label | Enabled value | Disabled value
+---|--- | --- | ---
+Namespace | istio-injection | enabled | disabled
+Pod | sidecar.istio.io/inject | "true" | "false"
