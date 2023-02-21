@@ -7,6 +7,10 @@ tags:
 - cloud-native
 - kubernetes
 - kubernetes Federation
+keywords:
+- cloud-native
+- kubernetes
+- kubernetes Federation
 ---
 Kubernetes从1.8版本起就声称单集群最多可支持5000个节点和15万个Pod，这个规模对于腰部以下团队来讲已经足够应对业务膨胀。但是总会出于混合云、可扩展性、降低网络延迟或者跨可用区故障隔离等各种各样因素考量去部署多集群。Kubernetes Cluster Federation 又名 KubeFed 或 Federation v2，Federation将使管理多个集群变得简单，打破各个集群边界，使之不再是一个个孤岛。
  <!--more-->

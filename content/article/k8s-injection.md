@@ -9,6 +9,11 @@ tags:
 - kubernetes
 - injector
 - sidecar
+keywords:
+- cloud-native
+- kubernetes
+- injector
+- sidecar
 # thumbnailImagePosition: "left"
 # thumbnailImage: https://open-native.obs.cn-north-4.myhuaweicloud.com/1_0Ah8nTMQ51U-hU_mrXOP1Q.webp
 ---
