@@ -6,6 +6,9 @@ categories:
 - 架构
 tags:
 - 架构
+keywords:
+- 分布式
+- architecture
 ---
 
 这篇文章的初衷，是记录拜读由Nathan Bronson, Aleksey Charapko, Abutalib Aghayev, and Timothy Zhu共同发表的论文[Metastable Failures in Distributed Systems](https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf)的收获，这篇论文描述了一个在大规模分布式系统中很常见的失败场景：亚稳定失败（metastable failures），它们为什么通常在高负载分布式系统中发生，以及解决问题的思路框架：如何识别和从亚稳定失败中恢复，甚至如何避免发生亚稳定失败。
