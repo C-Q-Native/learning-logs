@@ -1,7 +1,6 @@
 ---
 title: "深入理解Sidecar Injection"
 date: 2023-02-08T23:14:58+08:00
-draft: true
 categories:
 - kubernetes
 tags:
