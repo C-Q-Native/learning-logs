@@ -45,7 +45,7 @@ canonifyurls = true
 # ------
 [author]
   name = "Mr.Black"
-  bio = "一名不断探索、坚持学习的**少年**"
+  bio = "一名不断探索、坚持学习的**闲散工程师**"
   job = "云原生.盐酒猿"
   location = "CHINA🇨🇳"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
