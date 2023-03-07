@@ -8,6 +8,11 @@ tags:
 - Dapr
 - cloud-native
 - kubernetes
+keywords:
+- Dapr
+- cloud native
+- kubernetes
+- source code
 ---
 
 #### 日志

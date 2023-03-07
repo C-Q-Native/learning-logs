@@ -7,6 +7,10 @@ tags:
 - cloud-native
 - kubernetes
 - service-mesh
+keywords:
+- cloud-native
+- kubernetes
+- service-mesh
 #thumbnailImagePosition: "top"
 #thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city-750.jpg
 #coverImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city.jpg
