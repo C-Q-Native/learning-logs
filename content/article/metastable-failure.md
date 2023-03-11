@@ -2,7 +2,7 @@
 title: "分布式系统中亚稳定失败状态"
 date: 2022-01-13T14:50:17+08:00
 categories:
-- 翻译文章
+- 架构
 tags:
 - 架构
 keywords:
