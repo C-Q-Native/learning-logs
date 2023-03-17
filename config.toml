@@ -15,7 +15,7 @@
 baseURL = "http://open-native.com"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
-title = "云原生·盐酒猿"
+title = "闲散工程师笔记"
 theme = "tranquilpeak"
 disqusShortname = "tranquilpeak"
 # googleAnalytics = "UA-123-45"
@@ -44,7 +44,7 @@ canonifyurls = true
 # Author
 # ------
 [author]
-  name = "Mr.Black"
+  name = "闲散工程师笔记"
   bio = "一名不断探索、坚持学习的**闲散工程师**"
   job = "云原生.盐酒猿"
   location = "CHINA🇨🇳"
