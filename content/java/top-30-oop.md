@@ -177,3 +177,75 @@ No, you cannot. The argument list is part of the method signature and both overr
 #### 14. Can we override a method that throws runtime exception without throws clause?
 
 Yes, there is no restriction on unchecked exceptions while overriding. On the other hand, in the case of a checked exception, an overriding exception cannot throw a checked exception which comes higher in type hierarchy e.g. if the original method is throwing IOException then the overriding method cannot throw java.lang.Exception or java. lang.Throwable.
+
+#### 15. How do you call a superclass version of an overriding method in a subclass?
+
+You can call a superclass version of an overriding method in the subclass by using the super keyword. For example to call the toString() method from java.lang.Object class, you can call super.toString().
+
+#### 16. Can we override a non-static method as static in Java?
+
+Yes, you can override the non-static method in Java, no problem on them but it should not be private or final。
+
+#### 17. Can we override the final method in Java?
+
+No, you cannot override a final method in Java, the final keyword with the method is to prevent method overriding. You use the final when you don't want subclass changing the logic of your method by overriding it due to security reasons. This is why the String class is final in Java. This concept is also used in the template design patterns where the template method is made final to prevent overriding.
+
+#### 18. Can we have a non-abstract method inside an interface? 
+
+From Java 8 onward you can have a non-abstract method inside the interface, prior to that it was not allowed as all method was implicitly public abstract. From JDK 8, you can add static and default methods inside an interface.
+
+#### 19. What is the default method of Java 8?
+
+The default method, also known as the extension method is a new type of method which you can add to the interface now. These methods have implementation and are intended to be used by default. By using this method, JDK 8 managed to provide common functionality related to lambda expression and stream API without breaking all the clients who implement their interfaces. If you look at Java 8 API documentation you will find several useful default methods on key Java interfaces like Iterator, Map, etc.
+
+```
+interface Multiplication{ 
+    int multiply(int a, int b); 
+
+    default int square(int a){ 
+        return multiply(a, a); 
+    } 
+}
+
+```
+
+#### 20. What is an abstract class in Java?
+
+An abstract class is a class that is incomplete. You cannot create an instance of an abstract class in Java. They are provided to define default behavior and ensured that client of that class should adore to those contract which is defined inside the abstract class. In order to use it, you must extend and implement their abstract methods. BTW, in Java, a class can be abstract without specifying any abstract method.
+
+#### 21. What is an interface in Java? What is the real use of an interface? 
+
+As an abstract class, the interface is also there to specify the contract of an API. It supports the OOP abstraction concept as it defines only abstract behavior. It will tell that your program will give output but how is left to implementers. The real use of the interface to define types to leverage Polymorphism. See the answer for a more detailed explanation and discussion.
+
+#### 22. The difference between Abstract class and interface?
+
+In Java, the key difference is that the abstract class can contain a non-abstract method but the interface cannot, but from Java 8 onward interface can also contain static and default methods that are non-abstract. See the answer for a more detailed discussion as I have described a lot of points there.
+
+#### 23. Can we make a class abstract without an abstract method?
+
+Yes, just add abstract keyword on the class definition and your class will become abstract.
+
+#### 24. Can we make a class both final and abstract at the same time?
+
+No, you cannot apply both final and abstract keywords to the class at the same time because they are exactly the opposite of each other. A final class in Java cannot be extended and you cannot use an abstract class without extending and making it a concrete class. As per Java specification, the compiler will throw an error if you try to make a class abstract and final at the same time.
+
+#### 25. Can we overload or override the main method in Java?
+
+No, since main() is a static method, you can only overload it, you cannot override it because the static method is resolved at compile time without needing object information hence we cannot override the main method in Java.
+
+#### 26.What is the difference between Polymorphism, Overloading, and Overriding?
+
+This is a slightly tricky OOP concept question because Polymorphism is the real concept behind both Overloading and Overriding. Overloading is compiled time Polymorphism and Overriding is Runtime Polymorphism.
+
+#### 27. Can an interface extend more than one interface in Java?
+
+Yes, an interface can extend more than one interface in Java, it's perfectly valid.
+
+#### 28. Can a class extend more than one class in Java?
+
+No, a class can only extend another class because Java doesn't support multiple inheritances but yes, it can implement multiple interfaces.
+
+#### 29. What is the difference between abstraction and polymorphism in Java?
+
+Abstraction generalizes the concept and Polymorphism allows you to use different implementations without changing your code. 
+
