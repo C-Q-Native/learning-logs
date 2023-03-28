@@ -10,7 +10,7 @@ tags:
 #### 1. What problem is solved by the Strategy pattern in Java?
 
 Strategy pattern allows you to introduce a new algorithm or new strategy without changing the code which uses that algorithm. For example, the Collections.sort() method which sorts the list of the object uses the Strategy pattern to compare objects. Since every object uses a different comparison strategy you can compare various objects differently without changing the sort method.
-
+<!--more-->
 #### 2. Which OOP concept Decorator design Pattern is based upon?
 
 The decorator pattern takes advantage of Composition to provide new features without modifying the original class. A very good to-the-point question for the telephonic round. This is quite clear from the UML diagram of the Decorator pattern, as you can see the Component is associated with a Decorator.
