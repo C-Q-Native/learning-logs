@@ -12,7 +12,7 @@ tags:
 To set request timeout on database queries or calls by using Spring's @Transactional annotation. We may set the timeout attribute that it has. It has a default value of -1, which is the same as having no timeout at all. 
 
 Let's say we have set this timeout to 50 seconds. An exception will be raised if the annotated method takes longer than this amount of time to execute. This approach is quite handy for time-consuming database searches or long-running SQL queries.
-
+<!--more-->
 Let’s see it in action, we will create a simple rest endpoint that returns the student's details as shown below.
 
 ```
