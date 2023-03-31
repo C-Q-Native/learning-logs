@@ -1,5 +1,5 @@
 ---
-title: "Java 面试题整理 (一)"
+title: "Java 面试题汇编 (一)"
 date: 2021-06-18T16:23:19+08:00
 categories:
 - java
