@@ -361,9 +361,9 @@ public class Box<T super Integer> {
     }
 }
 ```
-In this example, the generic type parameter T is restricted to be a superclass of the Integer class or Integer itself. This means that when you create an instance of Box, you can only use Integer or its superclasses as the type argument for T.
+In this example, the generic type parameter `T` is restricted to be a superclass of the `Integer` class or `Integer` itself. This means that when you create an instance of Box, you can only use Integer or its superclasses as the type argument for `T`.
 
-For example, you can create an instance of Box<Number>, Box<Object>, or Box<Integer>, but you cannot create an instance of Box<Double> because Double is not a superclass of Integer.
+For example, you can create an instance of `Box<Number>`, `Box<Object>`, or `Box<Integer>,` but you cannot create an instance of `Box<Double>` because Double is not a superclass of Integer.
 
 By using a lower bounded wildcard, you can ensure that the generic type parameter satisfies certain constraints and allow more flexibility in the type argument.
 
