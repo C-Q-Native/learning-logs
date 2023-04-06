@@ -1,5 +1,5 @@
 ---
-title: "Centos7.x升级内核"
+title: "Centos 7.x内核版本升级实践"
 date: 2023-03-19T16:26:38+08:00
 categories:
 - kubernetes
