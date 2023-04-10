@@ -1,12 +1,18 @@
 ---
-title: "Pilot 架构介绍"
+title: "ISTIO Pilot 组件架构介绍"
 date: 2023-03-27T21:29:24+08:00
 categories:
-- Service Mesh
+- Istio
 tags:
 - cloud-native
 - kubernetes
 - service-mesh
+- Istio
+keywords:
+- cloud-native
+- kubernetes
+- service-mesh
+- Istio
 ---
 
 Pilot是Istio控制平面的核心组件，是管理和配置Istio服务网格中所有Envoy代理实例的司令官。
