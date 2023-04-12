@@ -2,7 +2,7 @@
 title: "关于 istio-proxy 503/504等5xx问题排查"
 date: 2022-10-02T23:05:46+08:00
 categories:
-- istio
+- Istio
 tags:
 - cloud-native
 - kubernetes
