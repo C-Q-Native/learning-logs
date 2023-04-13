@@ -1,5 +1,5 @@
 ---
-title: "ISTIO Mixer 组件架构介绍"
+title: "ISTIO Mixer 组件架构详解"
 date: 2023-04-08T21:29:24+08:00
 draft: true
 categories:
@@ -98,3 +98,15 @@ Mixer将接收到的配置信息均存储到Runtime实例的ephemeral对象中�
 监听操作首先调用Store的List接口取回现有的所有配置数据，并将这些配置数据存储到ephemeral对象的entries中，再调用Watch接口按收到的事件增量更新ephemeral。为了避免频繁更新后端模型对整个Mixer服务稳定性造成冲击，在watch事件到来之后不会立刻将数据写入ephemeral，从而同步出发更新所有Mixer后端资源信息，而是先将事件放入一个队列中，定时（默认1秒）将队列中的数据同步到ephemeral。
 
 ##### 2. 配置规则处理
+在ephemeral的配置信息更新时，Mixer同步调用processNewConfig方法启动一轮后端配置更，主要流程如下：
+- 1）初始化Snapshot对象（ephemeral.BuildSnapshot）
+  根据在ephemeral中存储的信息初始化Snapshot对象，Snapshot对象本身不做其他操作，只用来保存用户的配置信息与Mixer内置的Template、Adapter的对应关系。
+- 2）构造Handler（handler.NewTable）
+  NewTable方法根据在Snapshot对象中保存的Handler、Instance信息进行初始化并配置Adapter中的Handler对象，最后将配置好的Handler对象保存在handler.Table对象的entries中。entries以Handler名称为key对应到配置好的Handler。
+- 3）构造请求处理模型（routing.BuildTable）
+  BuildTable方法主要讲初始化后的数据存入Mixer构造的数据模型中，在客户端请求到来时，根据条件将请求分发到特定后端Adapter的Handler实例中处理。
+
+  Mixer的数据存储模型分为4个层次：将数据按Template类型分类；在单个Template分类中按命名空间分为多个分组；在单个分组中包含一个Handler实例及多个Instance实例；多个Instance实例又按匹配条件分为多个分组。
+- 4）保存数据模型（dispatcher.ChangeRoute）
+  所有配置好的数据对象都被保存到了Mixer实现的四层数据模型routing.Table中，该模型用于在请求到来时，将特定的请求分发到模型中特定的Handler对象中处理。
+
