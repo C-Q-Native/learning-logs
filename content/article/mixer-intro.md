@@ -19,7 +19,7 @@ Mixer是Istio另一个非常重要的组件，主要职责就是负责提供策�
 
 ### 1. Mixer整体架构详解
 Mixer整体架构：
-![Mixer架构图](https://img2018.cnblogs.com/i-beta/1383365/202001/1383365-20200114204447477-84964089.png)
+![Mixer架构图](https://open-native.obs.cn-north-4.myhuaweicloud.com/1383365-20200114204447477-84964089.png)
 
 在服务间进行请求转发时，Envoy对Mixer发起Check、Report这两次请求，即在转发请求前请求Mixer执行访问策略的管理配额，并在请求转发后上报要遥测数据。
 
