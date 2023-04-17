@@ -15,11 +15,11 @@ keywords:
 - cilium
 ---
 
-## 为什么需要Networkpolicy
+### 为什么需要Networkpolicy
 Networkpolicy可以控制进出pod的网络流量。默认情况下，每个pod都可以相互通信。当你想要阻止某些微服务相互通信时，网络策略就会派上用场，特别是当你与其他团队在共享集群中工作时。这使您的微服务在多租户环境中更具有隔离性。  
 关于Networkpolicy的一些基础知识，可以参照文章：[Kubernetes NetworkPolicy实践指南](http://open-native.com/article/networkpolicy/)  
 <!--more-->
-## 关于Cilium
+### 关于Cilium
 Cilium/eBPF是一种在内核级工作的技术。这意味着无需更改任何应用程序代码或容器配置，就可以更好地控制网络流量。而且，由于Cilium使网络流量可被跟踪，Tracing也变得简单。此外，Cilium可以与Prometheus互联，上报metrics指标。  
 关于eBPF的相关介绍和应用场景，可以阅读前一篇文章：[一文解读eBPF](http://open-native.com/article/ebpf/)  
 传统的防火墙通常在3/4层运行，使用允许或阻止IP地址和端口的规则列表。然而，Cilium通过在7层提供控制策略将其提升到一个新的水平。
@@ -28,13 +28,13 @@ Cilium/eBPF是一种在内核级工作的技术。这意味着无需更改任何
 
 Centos 7.x默认的内核版本是`3.10.0`，如何升级内核版本，可以参阅文章：[Centos 7.x内核版本升级实践](https://open-native.com/article/kernel-upgrade/)
 
-### 使用Minikube 启动集群
+#### 使用Minikube 启动集群
 
 ```
 minikube start --driver=docker --container-runtime=containerd --image-mirror-country='cn' --image-repository='registry.cn-hangzhou.aliyuncs.com/google_containers' --force --network-plugin=cni --cni=false
 ```
 注意，需要使用参数`--network-plugin` 和 `--cni` 设置`cni`组件。
-### 安装Cilium
+#### 安装Cilium
 1. 下载cilium-cli 工具包
 
 ```
