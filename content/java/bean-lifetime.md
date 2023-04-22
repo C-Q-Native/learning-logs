@@ -14,9 +14,9 @@ Bean 的生命周期概括起来就是 4 个阶段：
 2. 属性赋值（Populate）
 3. 初始化（Initialization）
 4. 销毁（Destruction）
+<!--more-->
 
 ![Bean 的生命周期](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/2/15/1704860a4de235aa~tplv-t2oaga2asx-zoom-in-crop-mark:3024:0:0:0.image)
-<!--more -->
 
 1. 实例化：第 1 步，实例化一个 bean 对象；
 2. 属性赋值：第 2 步，为 bean 设置相关属性和依赖；
