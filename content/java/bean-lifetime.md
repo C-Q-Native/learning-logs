@@ -1,5 +1,5 @@
 ---
-title: Spring Bean 的生命周期"
+title: Spring Bean 的生命周期
 date: 2021-04-22T11:36:26+08:00
 categories:
 - java
