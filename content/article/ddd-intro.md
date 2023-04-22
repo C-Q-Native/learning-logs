@@ -2,7 +2,7 @@
 title: "浅析领域驱动设计"
 date: 2022-03-02T23:29:33+08:00
 categories:
-- DDD
+- architecture
 tags:
 - 领域驱动设计
 - 架构
