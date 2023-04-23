@@ -15,7 +15,7 @@ tags:
 4706 org.apache.catalina.startup.Bootstrap
 5023 sun.tools.jps.Jps
 ```
-
+<!--more-->
 `jinfo -flags PID` 查看运行时进程参数与JVM参数
 ```
 Attaching to process ID 28987, please wait...
