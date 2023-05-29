@@ -1,6 +1,6 @@
 ---
 title: 各种设计模式如何用java代码体现？
-date: 2021-05-29T11:36:26+08:00
+date: 2023-05-29T11:36:26+08:00
 categories:
 - java
 tags:
